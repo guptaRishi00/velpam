@@ -1,9 +1,16 @@
+"use client";
+
 import Image from "next/image";
 import Button from "../shared/Button";
+import { useAppSelector } from "@/lib/store/hooks/hooks";
 
 type Props = {};
 
 export default function PreviewComponent({}: Props) {
+  const { order } = useAppSelector((state) => state.order);
+
+  console.log("Order from preview: ", order);
+
   return (
     <div className="px-10 my-10">
       <div className="w-full flex flex-col min-h-screen border border-[#FE564B40] rounded-3xl px-14 py-8 shadow-md">
@@ -27,7 +34,7 @@ export default function PreviewComponent({}: Props) {
           <div className="relative z-10 flex flex-col items-center gap-20 -mt-20">
             <div className="flex flex-col items-center gap-4">
               <h3 className="text-[#FE564B] font-bold text-5xl">
-                Happy Birthday
+                Happy {order?.ocassion}
               </h3>
 
               <Image
@@ -40,15 +47,16 @@ export default function PreviewComponent({}: Props) {
             </div>
 
             <p className="text-[#470100] font-bold italic text-2xl leading-relaxed max-w-2xl ">
-              &ldquo;It seems such a great day to say we feel so lucky that you
-              came our way! Happy Birthday to you! Make it grand!&rdquo;
+              {order?.message || "No Message"}
             </p>
           </div>
 
           {/* Signature Section - Positioned Bottom Right */}
           <div className="absolute bottom-10 right-12 flex flex-col items-end gap-1">
             <p className="text-[#FE564B] font-semibold text-lg">With Love,</p>
-            <p className="text-[#470100] font-bold text-xl">John</p>
+            <p className="text-[#470100] font-bold text-xl">
+              {order?.customerName}
+            </p>
 
             {/* Signature Line */}
             <div className="w-32 h-px bg-[#47010020] my-1"></div>
@@ -85,7 +93,9 @@ export default function PreviewComponent({}: Props) {
 
             <div className="flex flex-col items-start">
               <p className="text-[#47010099] font-medium text-lg">To:</p>
-              <p className="font-semibold text-xl text-[#470100]">Jaccob</p>
+              <p className="font-semibold text-xl text-[#470100]">
+                {order?.recipientName}
+              </p>
             </div>
           </div>
           <div className="flex items-start gap-6">
@@ -100,9 +110,11 @@ export default function PreviewComponent({}: Props) {
             <div className="flex flex-col items-start">
               <p className="text-[#47010099] font-medium text-lg">At:</p>
               <p className="font-semibold text-xl text-[#470100]">
-                The Grand Hotel
+                {order?.deliveryLocation}
               </p>
-              <p className="text-[#47010099] font-medium text-lg">London</p>
+              <p className="text-[#47010099] font-medium text-lg">
+                {order?.deliveryLocation}
+              </p>
             </div>
           </div>
           <div className="flex items-start gap-6">
@@ -117,7 +129,7 @@ export default function PreviewComponent({}: Props) {
             <div className="flex flex-col items-start">
               <p className="text-[#47010099] font-medium text-lg">On:</p>
               <p className="font-semibold text-xl text-[#470100]">
-                Friday 6 March 2026 at 05:36
+                {order?.deliveryDate}
               </p>
             </div>
           </div>
@@ -132,9 +144,11 @@ export default function PreviewComponent({}: Props) {
 
             <div className="flex flex-col items-start">
               <p className="text-[#47010099] font-medium text-lg">From:</p>
-              <p className="font-semibold text-xl text-[#470100]">John</p>
+              <p className="font-semibold text-xl text-[#470100]">
+                {order?.customerName}
+              </p>
               <p className="text-[#47010099] font-medium text-lg">
-                john@123.com
+                {order?.customerEmail}
               </p>
             </div>
           </div>

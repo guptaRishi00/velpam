@@ -21,9 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={poppins.variable}>
-      <AuthProvider>
-        <body className={`${poppins.variable} antialiased`}>{children}</body>
-      </AuthProvider>
+      <body className={`${poppins.variable} antialiased`}>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

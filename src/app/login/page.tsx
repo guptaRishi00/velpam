@@ -1,12 +1,77 @@
+"use client";
+
+import { login } from "@/lib/store/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks/hooks"; //
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Import useRouter
+import { useEffect, useState } from "react";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/home");
+    }
+  }, [isAuthenticated, router]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/login`,
+        {
+          email,
+          password,
+        }
+      );
+
+      dispatch(
+        login({
+          user: {
+            id: response.data.user.id,
+            email: response.data.user.email,
+            role: response.data.user.role,
+          },
+          token: response.data.token,
+        })
+      );
+
+      router.push("/home");
+    } catch (err: any) {
+      console.log("error: ", err);
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.message ||
+            "Login failed. Please check your credentials."
+        );
+      } else {
+        setError("An unexpected error occurred.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12 lg:px-20">
-      {/* Main Card Container matching the CreateForm style */}
       <div className="w-full max-w-xl border border-[#FE564B40] rounded-3xl px-8 md:px-14 py-10 shadow-md bg-white">
-        {/* Header Section */}
         <div className="flex flex-col items-center gap-4 mb-10 text-center">
           <Link href="/">
             <Image
@@ -27,9 +92,14 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Form Section */}
-        <form className="flex flex-col w-full gap-6">
-          {/* Email Input */}
+        <form className="flex flex-col w-full gap-6" onSubmit={handleSubmit}>
+          {/* Error Message Display */}
+          {error && (
+            <div className="p-3 text-sm text-red-500 bg-red-50 rounded-lg border border-red-200">
+              {error}
+            </div>
+          )}
+
           <div className="w-full">
             <label
               htmlFor="email"
@@ -42,10 +112,12 @@ export default function Login() {
               type="email"
               className="w-full border border-[#EE5B4A40] bg-[#FE564B0A] rounded-2xl px-6 py-4 mt-2 focus:outline-none focus:ring-2 focus:ring-[#FE564B] placeholder:text-[#47010080] transition-all"
               placeholder="e.g., John@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
-          {/* Password Input */}
           <div className="w-full">
             <label
               htmlFor="password"
@@ -58,6 +130,9 @@ export default function Login() {
               type="password"
               className="w-full border border-[#EE5B4A40] bg-[#FE564B0A] rounded-2xl px-6 py-4 mt-2 focus:outline-none focus:ring-2 focus:ring-[#FE564B] placeholder:text-[#47010080] transition-all"
               placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
             <div className="flex justify-end mt-2">
               <Link
@@ -69,16 +144,15 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Submit Button - Styled to match shared/Button.tsx but as a button element */}
           <button
             type="submit"
-            className="w-full bg-[#FE564B] text-white text-lg font-medium cursor-pointer px-6 py-4 rounded-xl mt-4 hover:shadow-lg transition-all"
+            disabled={loading}
+            className="w-full bg-[#FE564B] text-white text-lg font-medium cursor-pointer px-6 py-4 rounded-xl mt-4 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Log In
+            {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
 
-        {/* Footer */}
         <div className="mt-8 text-center">
           <p className="text-[#47010080] font-medium">
             Don&apos;t have an account?{" "}
