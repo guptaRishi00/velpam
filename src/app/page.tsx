@@ -9,17 +9,21 @@ export default function RootPage() {
 
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
 
-  if (user === null) {
-    return null;
-  }
-
   useEffect(() => {
-    if (isAuthenticated && user.role === "customer") {
-      router.push("/home");
-    } else {
+    if (!user && isAuthenticated) return;
+
+    if (isAuthenticated && user) {
+      if (user.role === "admin") {
+        router.push("/admin-dashboard");
+      } else if (user.role === "customer") {
+        router.push("/home");
+      } else {
+        router.push("/login");
+      }
+    } else if (!isAuthenticated) {
       router.push("/login");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, user, router]);
 
   return (
     <div className="flex h-screen w-full items-center justify-center">

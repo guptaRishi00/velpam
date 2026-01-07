@@ -161,7 +161,7 @@ export default function PreviewComponent({}: Props) {
             className="w-full cursor-pointer bg-white border border-[#FE564B] text-[#FE564B] lg:py-5 rounded-xl mt-10 font-semibold text-xl text-center"
           />
           <Button
-            href="/preview"
+            href="/pay"
             text="Proceed to Payment"
             className="w-full cursor-pointer bg-[#FE564B] text-white lg:py-5 rounded-xl mt-10 font-semibold text-xl text-center"
           />

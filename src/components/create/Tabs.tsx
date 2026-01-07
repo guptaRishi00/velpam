@@ -1,4 +1,12 @@
 export default function Tabs({ currentStep }: any) {
+  // Determine the width based on the step
+  const progressWidth =
+    currentStep === "pay"
+      ? "w-full"
+      : currentStep === "preview"
+      ? "w-2/3"
+      : "w-1/3";
+
   return (
     <div className="flex flex-col items-start px-10">
       <div className="flex flex-col items-start gap-5 lg:px-8 py-14">
@@ -33,7 +41,9 @@ export default function Tabs({ currentStep }: any) {
           </p>
         </div>
         <div className="h-4 rounded-full w-full bg-[#FEF5EF]">
-          <div className="h-4 rounded-full w-1/2 bg-[#FE564B]"></div>
+          <div
+            className={`h-4 rounded-full bg-[#FE564B] transition-all duration-500 ease-in-out ${progressWidth}`}
+          ></div>
         </div>
       </div>
     </div>

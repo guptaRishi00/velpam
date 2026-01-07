@@ -16,13 +16,19 @@ export default function Login() {
 
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/home");
+    if (isAuthenticated && user) {
+      if (user.role === "admin") {
+        router.push("/admin-dashboard");
+      } else if (user.role === "provider") {
+        router.push("/provider-dashboard");
+      } else {
+        router.push("/home");
+      }
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +44,9 @@ export default function Login() {
         }
       );
 
+      const userRole = response.data.user.role;
+      console.log("From login user: ", userRole);
+
       dispatch(
         login({
           user: {
@@ -48,8 +57,6 @@ export default function Login() {
           token: response.data.token,
         })
       );
-
-      router.push("/home");
     } catch (err: any) {
       console.log("error: ", err);
       if (axios.isAxiosError(err)) {

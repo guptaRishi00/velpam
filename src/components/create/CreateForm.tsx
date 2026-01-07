@@ -27,6 +27,7 @@ const providers = [
 ];
 
 export default function CreateForm({}: any) {
+  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -105,6 +106,14 @@ export default function CreateForm({}: any) {
     dispatch(addOrder(orderData));
     router.push("/preview");
   };
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted || !user) {
+    return <div className="p-10 text-center">Please Login to continue.</div>;
+  }
 
   return (
     <div className="px-10 my-10">
