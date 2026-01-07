@@ -79,12 +79,9 @@ export default function AdminFinance() {
             onClick={() => setActiveTab("transactions")}
             className={`px-8 py-3 rounded-full font-medium text-lg transition-all ${
               activeTab === "transactions"
-                ? "bg-[#FE564B0F] text-[#FE564B] shadow-sm bg-white"
+                ? "bg-[#FE564B] text-white shadow-md"
                 : "text-[#FE564B] hover:opacity-80"
             }`}
-            style={
-              activeTab === "transactions" ? { backgroundColor: "#FFF5F5" } : {}
-            }
           >
             Transactions
           </button>
@@ -101,11 +98,11 @@ export default function AdminFinance() {
         </div>
 
         {/* --- Dynamic Content Section --- */}
-        <div className="w-full bg-white border border-[#FE564B40] rounded-3xl p-6 lg:p-8 shadow-sm overflow-hidden min-h-[400px]">
+        <div className="w-full bg-white border border-[#FE564B40] rounded-3xl p-6 lg:p-8 shadow-sm overflow-hidden min-h-100">
           {/* CASE 1: Transactions Table */}
           {activeTab === "transactions" && (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[800px]">
+              <table className="w-full min-w-200">
                 <thead>
                   <tr className="text-left border-b border-[#FE564B20]">
                     <th className="pb-6 text-[#470100] font-bold text-lg w-1/5 pl-4">
@@ -189,7 +186,7 @@ export default function AdminFinance() {
               <div className="h-px w-full bg-[#FE564B20]"></div>
 
               {/* Content / Empty State */}
-              <div className="flex-1 flex items-center justify-center min-h-[200px]">
+              <div className="flex-1 flex items-center justify-center min-h-50">
                 <p className="text-[#47010080] font-medium text-lg">
                   No pending payouts for this month
                 </p>
