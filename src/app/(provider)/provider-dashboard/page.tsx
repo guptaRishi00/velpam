@@ -1,6 +1,8 @@
 "use client";
+import ConfirmDelivery from "@/components/provider-components/ConfirmDelivery";
 import NewOrders from "@/components/provider-components/NewOrders";
-import { useState } from "react";
+import OrderDetailsModal from "@/components/provider-components/OrderDetailsModal";
+import { use, useState } from "react";
 
 type Props = {};
 
@@ -8,6 +10,9 @@ export default function ProviderDashboard({}: Props) {
   const [activeTab, setActiveTab] = useState<
     "newOrders" | "completed" | "accountBilling"
   >("newOrders");
+
+  const [viewDetailModal, setViewDetailModal] = useState(false);
+  const [confirmDelivery, setConfirmDelivery] = useState(false);
 
   return (
     <div className="px-10 space-y-5">
@@ -47,7 +52,19 @@ export default function ProviderDashboard({}: Props) {
         </div>
       </div>
 
-      {activeTab === "newOrders" && <NewOrders />}
+      {activeTab === "newOrders" && (
+        <NewOrders
+          setViewDetailModal={setViewDetailModal}
+          setConfirmDelivery={setConfirmDelivery}
+        />
+      )}
+      {viewDetailModal && (
+        <OrderDetailsModal setViewDetailModal={setViewDetailModal} />
+      )}
+
+      {confirmDelivery && (
+        <ConfirmDelivery onClose={() => setConfirmDelivery(false)} />
+      )}
     </div>
   );
 }

@@ -15,7 +15,7 @@ export default function ProviderLayout({
   return (
     <>
       <ProviderHeader />
-      <div className="w-full min-h-screen">
+      <div className="w-full h-auto">
         <main className="w-full">{children}</main>
       </div>
     </>

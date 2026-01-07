@@ -2,9 +2,10 @@ import { LuRefreshCcw } from "react-icons/lu";
 import { GrLocation } from "react-icons/gr";
 import { CiCalendarDate } from "react-icons/ci";
 
-type Props = {};
-
-export default function NewOrders({}: Props) {
+export default function NewOrders({
+  setViewDetailModal,
+  setConfirmDelivery,
+}: any) {
   return (
     <div className="space-y-10">
       <div className="w-full flex items-center justify-between">
@@ -28,7 +29,10 @@ export default function NewOrders({}: Props) {
             </span>
           </p>
 
-          <button className="border border-[#47010099] rounded-xl px-13 py-1.5 cursor-pointer">
+          <button
+            onClick={() => setViewDetailModal(true)}
+            className="border border-[#47010099] rounded-xl px-13 py-1.5 cursor-pointer"
+          >
             View Details
           </button>
         </div>
@@ -46,7 +50,10 @@ export default function NewOrders({}: Props) {
             </p>
           </div>
 
-          <button className="bg-[#FE564B] text-white rounded-xl px-8 py-1.5 cursor-pointer">
+          <button
+            onClick={() => setConfirmDelivery(true)}
+            className="bg-[#FE564B] text-white rounded-xl px-8 py-1.5 cursor-pointer"
+          >
             Mark as Delivered
           </button>
         </div>
