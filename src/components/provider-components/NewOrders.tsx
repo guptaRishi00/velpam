@@ -5,32 +5,54 @@ import { CiCalendarDate } from "react-icons/ci";
 export default function NewOrders({
   setViewDetailModal,
   setConfirmDelivery,
+  order,
+  setModalOrder,
+  setMarkAsDelivered,
 }: any) {
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "Date not available";
+
+    const date = new Date(dateString);
+
+    const dateOptions = {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    } as const;
+
+    const timeOptions = {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    } as const;
+
+    const formattedDate = new Intl.DateTimeFormat("en-GB", dateOptions).format(
+      date
+    );
+    const formattedTime = new Intl.DateTimeFormat("en-GB", timeOptions).format(
+      date
+    );
+
+    return `${formattedDate} at ${formattedTime}`;
+  };
+
   return (
     <div className="space-y-10">
-      <div className="w-full flex items-center justify-between">
-        <p className="text-[#47010080] font-medium text-lg">
-          1 order pending delivery
-        </p>
-        <button className="flex items-center gap-2 bg-[#FE564B40] rounded-xl py-2 px-3">
-          <LuRefreshCcw color="#FE564B" />
-          <span className="text-[#470100BF] font-medium cursor-pointer">
-            Refresh
-          </span>
-        </button>
-      </div>
-
       <div className="w-full rounded-3xl h-auto p-8 shadow-md border border-[#FE564B40] space-y-6">
         <div className="flex items-center justify-between">
           <p className="text-[#47010099] font-medium text-xl flex items-center gap-2">
-            Jacob Mark
+            {order?.recipientName}
             <span className="text-sm rounded-md text-[#470100BF] bg-[#FE564B40] px-2 py-1">
-              Birthday
+              {order?.occasion}
             </span>
           </p>
 
           <button
-            onClick={() => setViewDetailModal(true)}
+            onClick={() => {
+              setModalOrder(order);
+              setViewDetailModal(true);
+            }}
             className="border border-[#47010099] rounded-xl px-13 py-1.5 cursor-pointer"
           >
             View Details
@@ -40,18 +62,23 @@ export default function NewOrders({
         <div className="w-full flex items-center justify-between">
           <div className="flex items-center gap-2">
             <GrLocation color="#FE564B" />
-            <p className="text-[#47010099] font-medium text-lg">Room 205</p>
+            <p className="text-[#47010099] font-medium text-lg">
+              {order?.deliveryLocation}
+            </p>
           </div>
 
           <div className="flex items-center gap-2">
             <CiCalendarDate color="#FE564B " size={20} />
             <p className="text-[#47010099] font-medium text-lg">
-              Friday 6 March 2026 at 05:36
+              {formatDate(order?.deliveryDate)}
             </p>
           </div>
 
           <button
-            onClick={() => setConfirmDelivery(true)}
+            onClick={() => {
+              setMarkAsDelivered(order);
+              setConfirmDelivery(true);
+            }}
             className="bg-[#FE564B] text-white rounded-xl px-8 py-1.5 cursor-pointer"
           >
             Mark as Delivered

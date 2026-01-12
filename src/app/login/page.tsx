@@ -1,11 +1,11 @@
 "use client";
 
 import { login } from "@/lib/store/features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks/hooks"; //
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks/hooks";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Login() {
@@ -38,14 +38,8 @@ export default function Login() {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/login`,
-        {
-          email,
-          password,
-        }
+        { email, password }
       );
-
-      const userRole = response.data.user.role;
-      console.log("From login user: ", userRole);
 
       dispatch(
         login({
@@ -58,12 +52,8 @@ export default function Login() {
         })
       );
     } catch (err: any) {
-      console.log("error: ", err);
       if (axios.isAxiosError(err)) {
-        setError(
-          err.response?.data?.message ||
-            "Login failed. Please check your credentials."
-        );
+        setError(err.response?.data?.message || "Login failed.");
       } else {
         setError("An unexpected error occurred.");
       }
@@ -72,52 +62,53 @@ export default function Login() {
     }
   };
 
-  if (isAuthenticated) {
-    return null;
-  }
+  if (isAuthenticated) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12 lg:px-20">
-      <div className="w-full max-w-xl border border-[#FE564B40] rounded-3xl px-8 md:px-14 py-10 shadow-md bg-white">
-        <div className="flex flex-col items-center gap-4 mb-10 text-center">
+    // Reduced vertical padding (py-12 -> py-8)
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 py-8">
+      {/* Reduced max-width (max-w-xl -> max-w-md) and padding */}
+      <div className="w-full max-w-md border border-[#FE564B40] rounded-2xl px-6 md:px-10 py-8 shadow-sm bg-white">
+        <div className="flex flex-col items-center gap-3 mb-8 text-center">
           <Link href="/">
             <Image
               src="/logo.svg"
               alt="Velpam Logo"
-              width={150}
-              height={50}
-              className="w-32 h-auto"
+              width={120} // Slightly smaller logo
+              height={40}
+              className="w-28 h-auto"
             />
           </Link>
           <div>
-            <h1 className="text-3xl md:text-4xl text-[#470100] font-bold">
+            {/* Smaller headings (text-3xl/4xl -> text-2xl/3xl) */}
+            <h1 className="text-2xl md:text-3xl text-[#470100] font-bold tracking-tight">
               Welcome Back
             </h1>
-            <p className="text-[#47010080] font-medium text-base md:text-lg mt-2">
+            <p className="text-[#47010080] font-medium text-sm md:text-base mt-1">
               Sign in to continue creating memorable moments
             </p>
           </div>
         </div>
 
-        <form className="flex flex-col w-full gap-6" onSubmit={handleSubmit}>
-          {/* Error Message Display */}
+        <form className="flex flex-col w-full gap-5" onSubmit={handleSubmit}>
           {error && (
-            <div className="p-3 text-sm text-red-500 bg-red-50 rounded-lg border border-red-200">
+            <div className="p-2.5 text-xs text-red-500 bg-red-50 rounded-lg border border-red-200">
               {error}
             </div>
           )}
 
           <div className="w-full">
+            {/* Reduced label size (text-xl -> text-sm) */}
             <label
               htmlFor="email"
-              className="text-xl text-[#470100] font-medium ml-1"
+              className="text-sm text-[#470100] font-semibold ml-1"
             >
               Email Address
             </label>
             <input
               id="email"
               type="email"
-              className="w-full border border-[#EE5B4A40] bg-[#FE564B0A] rounded-2xl px-6 py-4 mt-2 focus:outline-none focus:ring-2 focus:ring-[#FE564B] placeholder:text-[#47010080] transition-all"
+              className="w-full border border-[#EE5B4A40] bg-[#FE564B0A] rounded-xl px-4 py-3 mt-1.5 focus:outline-none focus:ring-2 focus:ring-[#FE564B] placeholder:text-[#47010060] text-sm transition-all"
               placeholder="e.g., John@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -128,23 +119,23 @@ export default function Login() {
           <div className="w-full">
             <label
               htmlFor="password"
-              className="text-xl text-[#470100] font-medium ml-1"
+              className="text-sm text-[#470100] font-semibold ml-1"
             >
               Password
             </label>
             <input
               id="password"
               type="password"
-              className="w-full border border-[#EE5B4A40] bg-[#FE564B0A] rounded-2xl px-6 py-4 mt-2 focus:outline-none focus:ring-2 focus:ring-[#FE564B] placeholder:text-[#47010080] transition-all"
+              className="w-full border border-[#EE5B4A40] bg-[#FE564B0A] rounded-xl px-4 py-3 mt-1.5 focus:outline-none focus:ring-2 focus:ring-[#FE564B] placeholder:text-[#47010060] text-sm transition-all"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <div className="flex justify-end mt-2">
+            <div className="flex justify-end mt-1.5">
               <Link
                 href="/forgot-password"
-                className="text-[#FE564B] font-medium text-sm hover:underline"
+                className="text-[#FE564B] font-medium text-xs hover:underline"
               >
                 Forgot Password?
               </Link>
@@ -154,14 +145,15 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#FE564B] text-white text-lg font-medium cursor-pointer px-6 py-4 rounded-xl mt-4 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            // Reduced padding (py-4 -> py-3) and text size
+            className="w-full bg-[#FE564B] text-white text-base font-semibold cursor-pointer px-6 py-3 rounded-xl mt-2 hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
 
-        <div className="mt-8 text-center">
-          <p className="text-[#47010080] font-medium">
+        <div className="mt-6 text-center">
+          <p className="text-[#47010080] text-sm font-medium">
             Don&apos;t have an account?{" "}
             <Link
               href="/register"

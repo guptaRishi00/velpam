@@ -12,7 +12,14 @@ const ProtectedRoute = dynamic(
   () => import("@/components/shared/ProtectedRoute"),
   {
     ssr: false,
-    loading: () => <p>Loading...</p>,
+    loading: () => (
+      <div className="flex h-screen w-full flex-col items-center justify-center bg-white gap-4">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#FE564B] border-t-transparent"></div>
+        <p className="text-[#47010080] font-medium animate-pulse text-lg">
+          Preparing your experience...
+        </p>
+      </div>
+    ),
   }
 );
 

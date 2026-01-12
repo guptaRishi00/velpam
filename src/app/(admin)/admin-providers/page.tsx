@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Eye, Plus } from "lucide-react";
+import AddProviderModal from "@/components/admin/AddProviderModal";
 
 // Mock Data based on the image
 const providers = [
@@ -34,6 +35,12 @@ const providers = [
 type Props = {};
 
 export default function AdminProviders({}: Props) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleRefresh = () => {
+    console.log("Refreshing providers list...");
+  };
+
   return (
     <div className="w-full min-h-screen p-6 lg:p-10">
       <div className="flex flex-col gap-8 w-full">
@@ -43,10 +50,19 @@ export default function AdminProviders({}: Props) {
             Service Provider Management
           </h1>
 
-          <button className="flex items-center gap-2 bg-[#FE564B] hover:bg-[#e0453a] text-white px-6 py-3 rounded-xl font-medium transition-all shadow-md">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2 bg-[#FE564B] hover:bg-[#e0453a] text-white px-6 py-3 rounded-xl font-medium transition-all shadow-md"
+          >
             <Plus size={20} />
             Add New Provider
           </button>
+
+          <AddProviderModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onSuccess={handleRefresh}
+          />
         </div>
 
         {/* --- Table Section --- */}

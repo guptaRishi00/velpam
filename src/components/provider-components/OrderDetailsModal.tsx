@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import {
   User,
   PartyPopper,
@@ -11,9 +11,38 @@ import {
 
 type Props = {
   setViewDetailModal: (value: boolean) => void;
+  modalOrder: any;
 };
 
-export default function OrderDetailsModal({ setViewDetailModal }: Props) {
+export default function OrderDetailsModal({
+  setViewDetailModal,
+  modalOrder,
+}: Props) {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+
+    const dateOptions = {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    } as const;
+
+    const timeOptions = {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    } as const;
+
+    const formattedDate = new Intl.DateTimeFormat("en-GB", dateOptions).format(
+      date
+    );
+    const formattedTime = new Intl.DateTimeFormat("en-GB", timeOptions).format(
+      date
+    );
+
+    return `${formattedDate} at ${formattedTime}`;
+  };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200">
       <div className="relative w-full h-auto max-w-4xl bg-white rounded-2xl shadow-2xl flex flex-col lg:flex-row overflow-hidden max-h-[90vh] overflow-y-auto">
@@ -30,7 +59,7 @@ export default function OrderDetailsModal({ setViewDetailModal }: Props) {
                   To:
                 </span>
                 <span className="text-[#470100] font-bold text-base leading-tight">
-                  Jacob
+                  {modalOrder?.recipientName}
                 </span>
               </div>
             </div>
@@ -45,7 +74,7 @@ export default function OrderDetailsModal({ setViewDetailModal }: Props) {
                   Occasion:
                 </span>
                 <span className="text-[#470100] font-bold text-base leading-tight">
-                  Birthday
+                  {modalOrder?.occasion}
                 </span>
               </div>
             </div>
@@ -57,7 +86,7 @@ export default function OrderDetailsModal({ setViewDetailModal }: Props) {
                   To:
                 </span>
                 <span className="text-[#470100] font-bold text-base leading-tight">
-                  Room 205
+                  {modalOrder?.deliveryLocation}
                 </span>
               </div>
             </div>
@@ -69,7 +98,7 @@ export default function OrderDetailsModal({ setViewDetailModal }: Props) {
                   On:
                 </span>
                 <span className="text-[#470100] font-bold text-base leading-tight">
-                  Friday 6 March 2026 at 05:36
+                  {formatDate(modalOrder?.deliveryDate)}
                 </span>
               </div>
             </div>
@@ -84,8 +113,7 @@ export default function OrderDetailsModal({ setViewDetailModal }: Props) {
                   Message to Deliver:
                 </span>
                 <p className="text-[#470100] font-bold text-sm leading-relaxed">
-                  “It seems such a great day to say we feel so lucky that you
-                  came our way! Happy Birthday to you! Make it grand!”
+                  {modalOrder?.message}
                 </p>
               </div>
             </div>
@@ -97,7 +125,7 @@ export default function OrderDetailsModal({ setViewDetailModal }: Props) {
                   From:
                 </span>
                 <span className="text-[#470100] font-bold text-base leading-tight">
-                  John
+                  {modalOrder?.customerName}
                 </span>
               </div>
             </div>

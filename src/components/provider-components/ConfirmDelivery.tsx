@@ -1,12 +1,50 @@
 "use client";
 
+import axios from "axios";
 import { X, Upload } from "lucide-react";
+import { useState } from "react";
+import { useAppSelector } from "@/lib/store/hooks/hooks";
 
 type Props = {
-  onClose?: () => void;
+  onClose: () => void;
+  markAsDelivered: any;
 };
 
-export default function ConfirmDelivery({ onClose }: Props) {
+export default function ConfirmDelivery({ onClose, markAsDelivered }: Props) {
+  const [deliveredBy, setDeliveredBy] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { token } = useAppSelector((state) => state.auth);
+
+  const handleMarkAsDelivered = async () => {
+    if (!deliveredBy.trim()) {
+      alert("Please enter the name of the person who delivered the order.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/provider/orders/${markAsDelivered.orderId}/mark-delivered`,
+        {
+          deliveredBy: deliveredBy,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      onClose();
+    } catch (error) {
+      console.error("Failed to mark as delivered", error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200">
       <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 flex flex-col gap-6">
@@ -24,16 +62,21 @@ export default function ConfirmDelivery({ onClose }: Props) {
 
         <p className="text-[#47010099] font-medium text-lg leading-tight">
           Are you sure you have delivered this Valpem to{" "}
-          <span className="font-bold text-[#470100]">Jacob Mark</span>?
+          <span className="font-bold text-[#470100]">
+            {markAsDelivered?.recipientName}
+          </span>
+          ?
         </p>
 
         <div className="flex flex-col gap-5 mt-2">
           <div className="flex flex-col gap-2">
             <label className="text-[#470100] font-bold text-lg">
-              Delivered by(your name)*
+              Delivered by (your name)*
             </label>
             <input
               type="text"
+              value={deliveredBy}
+              onChange={(e) => setDeliveredBy(e.target.value)}
               placeholder="e.g., Ray Mathew"
               className="w-full bg-[#FFF5F5] border border-[#FE564B20] rounded-xl px-5 py-4 text-[#470100] placeholder:text-[#47010060] focus:outline-none focus:ring-2 focus:ring-[#FE564B] transition-all"
             />
@@ -58,12 +101,17 @@ export default function ConfirmDelivery({ onClose }: Props) {
         <div className="flex gap-4 mt-4">
           <button
             onClick={onClose}
-            className="flex-1 py-3.5 rounded-xl border border-[#FE564B] text-[#FE564B] font-bold text-lg hover:bg-[#FE564B0A] transition-all"
+            disabled={loading}
+            className="flex-1 py-3.5 rounded-xl border border-[#FE564B] text-[#FE564B] font-bold text-lg hover:bg-[#FE564B0A] transition-all disabled:opacity-50"
           >
             Cancel
           </button>
-          <button className="flex-1 py-3.5 rounded-xl bg-[#FE564B] text-white font-bold text-lg shadow-md hover:shadow-lg hover:bg-[#e0453a] transition-all">
-            Confirm Delivery
+          <button
+            onClick={handleMarkAsDelivered}
+            disabled={loading}
+            className="flex-1 py-3.5 rounded-xl bg-[#FE564B] text-white font-bold text-lg shadow-md hover:shadow-lg hover:bg-[#e0453a] transition-all disabled:opacity-50 flex justify-center items-center"
+          >
+            {loading ? "Confirming..." : "Confirm Delivery"}
           </button>
         </div>
       </div>

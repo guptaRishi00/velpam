@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 import { clsx, ClassValue } from "clsx";
@@ -9,11 +11,8 @@ function cn(...inputs: ClassValue[]) {
 interface ButtonProps {
   text: string;
   className?: string;
-
   href?: string;
-
   onClick?: () => void;
-
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
 }

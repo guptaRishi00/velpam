@@ -1,8 +1,21 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import Button from "../shared/Button";
+import { useAppDispatch } from "@/lib/store/hooks/hooks";
+import { logout } from "@/lib/store/features/auth/authSlice";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/login");
+  };
+
   return (
     <header className="flex flex-row justify-between items-center px-6 py-4 lg:px-10 lg:py-6">
       <Link href="/">
@@ -16,7 +29,7 @@ export default function Header() {
         />
       </Link>
 
-      <Button href="/contact-us" text="Contact Us" />
+      <Button onClick={handleLogout} text="Logout" />
     </header>
   );
 }

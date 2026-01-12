@@ -31,7 +31,7 @@ export default function SecurePayment({}: Props) {
       }
 
       const payload = {
-        providerId: "65f2a3b1c9e8d7f6a5b4c3d2",
+        providerId: order.providerId,
         occasion: order.ocassion,
         recipientName: order.recipientName,
         message: order.message,
